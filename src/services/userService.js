@@ -1,8 +1,9 @@
+const { addVehicle } = require("../controllers/usersConstroller");
 const User = require("../models/User");
 
 module.exports = {
     getUsers: async () => {
-        const users = await User.find();
+        const users = await User.find().populate("vehicle");
         return users;
     },
 
@@ -29,5 +30,12 @@ module.exports = {
     deleteUser: async (id) => {
         const deleteUser = await User.findByIdAndDelete(id);
         return deleteUser;
-    }
+    },
+
+    addVehicle: async ({ userId, vehicleId }) => {
+        const user = await User.findById(userId);
+        user.vehicle = vehicleId;
+        await user.save();
+        return user;
+    } 
 };
